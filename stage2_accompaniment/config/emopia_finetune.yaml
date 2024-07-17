@@ -1,0 +1,32 @@
+data_loader:
+  batch_size: 4
+  data_path: emopia_events/full_song_chord11_{}_adjusted_clean/events
+  train_split: emopia_events/data_splits/train.pkl
+  val_split: emopia_events/data_splits/valid.pkl
+  vocab_path: emopia_events/full_song_chord11_{}_adjusted_clean/dictionary.pkl
+model:
+  d_embed: 512
+  d_ff: 2048
+  d_model: 512
+  feature_map:
+    n_dims: 128
+  max_len: 3072
+  n_head: 8
+  n_layer: 12
+  use_segemb: true
+  n_segment_types: 2
+training:
+  ckpt_dir: ckpt/emopia_full_song_{}
+  ckpt_interval: 10
+  feat_redraw_prob: 0.05
+  gpuid: 0
+  log_interval: 50
+  lr: 1.0e-05
+  lr_scheduler:
+    T_max: 500000
+    eta_min: 1.0e-06
+  num_epochs: 1000
+  trained_optim: ckpt/pop1k7_full_song_absolute/optim/ep300_loss0.565_optim.pt
+  trained_params: ckpt/pop1k7_full_song_absolute/params/ep300_loss0.565_params.pt
+  inference_params: ckpt/emopia_full_song_absolute_adjust_e300_clean_2/params/ep300_loss0.350_params.pt
+  warmup_steps: 200
