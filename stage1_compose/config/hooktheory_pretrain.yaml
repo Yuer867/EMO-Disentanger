@@ -1,0 +1,39 @@
+device: cuda
+pretrained_optim_path: null
+pretrained_param_path: null
+inference_param_path:  ckpt/hooktheory_key_s2000/params/ep015_loss0.584_params.pt
+
+model:
+  d_word_embed: 512
+  pre_lnorm: True
+  decoder:
+    n_layer: 12
+    n_head: 8
+    d_model: 512
+    d_ff: 2048
+    dropout: 0.1
+    mem_len: 0
+    tgt_len: 512  # 1024
+
+data:
+  data_dir: hooktheory_events/lead_sheet_chord11_key/events
+  train_split: hooktheory_events/data_splits/train.pkl
+  val_split: hooktheory_events/data_splits/valid.pkl
+  vocab_path: hooktheory_events/lead_sheet_chord11_key/dictionary.pkl
+  batch_size: 8
+  max_n_seg: 1
+
+training:
+  trained_steps: 0
+  trained_epochs: 0
+  warmup_steps: 200
+  lr_decay_steps: 500000
+  max_lr: 1.0e-4
+  min_lr: 1.0e-5
+  max_epoch: 100
+  val_interval: 1
+  log_interval: 50
+
+output:
+    ckpt_dir: ckpt/hooktheory_functional_aug
+    ckpt_interval: 5

@@ -1,0 +1,39 @@
+device: cuda
+pretrained_optim_path: ckpt/pop1k7_functional_b2_2400/optim/ep080_loss0.396_optim.pt   # null
+pretrained_param_path: ckpt/pop1k7_functional_b2_2400/params/ep080_loss0.396_params.pt  # null
+inference_param_path:  ckpt/emopia_absolute_full_b2_2400_2/params/ep100_loss0.620_params.pt # null
+
+model:
+  d_word_embed: 512
+  pre_lnorm: True
+  decoder:
+    n_layer: 12
+    n_head: 8
+    d_model: 512
+    d_ff: 2048
+    dropout: 0.1
+    mem_len: 0
+    tgt_len: 2400  # 1024
+
+data:
+  data_dir: emopia_events/full_song_chord11_{}_adjusted/events
+  train_split: emopia_events/data_splits/train.pkl
+  val_split: emopia_events/data_splits/valid.pkl
+  vocab_path: emopia_events/full_song_chord11_{}_adjusted/dictionary.pkl
+  batch_size: 2
+  max_n_seg: 1
+
+training:
+  trained_steps: 0
+  trained_epochs: 0
+  warmup_steps: 200
+  lr_decay_steps: 500000
+  max_lr: 1.0e-5
+  min_lr: 1.0e-6
+  max_epoch: 100
+  val_interval: 1
+  log_interval: 50
+
+output:
+    ckpt_dir: ckpt/emopia_full_song_{}
+    ckpt_interval: 4
