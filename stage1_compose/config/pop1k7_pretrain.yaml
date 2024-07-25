@@ -1,7 +1,7 @@
 device: cuda
 pretrained_optim_path: null
 pretrained_param_path: null
-inference_param_path:  ckpt/pop1k7_absolute_b2_2400_2/params/ep080_loss0.459_params.pt # ckpt/emopia_reduced_functional/params/ep030_loss0.534_params.pt
+inference_param_path:  null
 
 model:
   d_word_embed: 512
@@ -13,13 +13,13 @@ model:
     d_ff: 2048
     dropout: 0.1
     mem_len: 0
-    tgt_len: 2400  # 1024
+    tgt_len: 2400
 
 data:
-  data_dir: pop1k7_events/full_song_chorder_absolute/events
-  train_split: pop1k7_events/data_splits/train.pkl
-  val_split: pop1k7_events/data_splits/valid.pkl
-  vocab_path: pop1k7_events/full_song_chorder_absolute/dictionary.pkl
+  data_dir: events/stage1/pop1k7_events/full_song_chorder_{}/events
+  train_split: events/stage1/pop1k7_events/data_splits/train.pkl
+  val_split: events/stage1/pop1k7_events/data_splits/valid.pkl
+  vocab_path: events/stage1/pop1k7_events/full_song_chorder_{}/dictionary.pkl
   batch_size: 2
   max_n_seg: 1
 
@@ -35,5 +35,5 @@ training:
   log_interval: 50
 
 output:
-    ckpt_dir: ckpt/pop1k7_functional_b2_2400
+    ckpt_dir: ckpt/pop1k7_{}
     ckpt_interval: 5

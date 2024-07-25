@@ -88,8 +88,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-c', '--configuration',
-                          choices=['config/hooktheory_pretrain.yaml', 'config/emopia_finetune.yaml',
-                                   'config/pop1k7_pretrain.yaml', 'config/emopia_finetune_full.yaml'],
+                          choices=['stage1_compose/config/hooktheory_pretrain.yaml',
+                                   'stage1_compose/config/emopia_finetune.yaml',
+                                   'stage1_compose/config/pop1k7_pretrain.yaml',
+                                   'stage1_compose/config/emopia_finetune_full.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['absolute', 'functional'],
@@ -98,10 +100,10 @@ if __name__ == '__main__':
                           choices=['lead_sheet', 'full_song'],
                           help='generation mode', required=True)
     parser.add_argument('-i', '--inference_params',
-                        default='emo_harmonizer_ckpt_functional/best_params.pt',
+                        default='best_weight/Functional-two/emopia_lead_sheet_finetune/ep016_loss0.685_params.pt',
                         help='inference parameters')
     parser.add_argument('-o', '--output_dir',
-                        default='generation/emopia_functional_rule',
+                        default='generation/emopia_functional_two',
                         help='output directory')
     parser.add_argument('-p', '--play_midi',
                         default=False,

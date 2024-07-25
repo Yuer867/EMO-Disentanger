@@ -138,34 +138,34 @@ if __name__ == '__main__':
         raise ValueError("invalid representation {}, choose from ['absolute', 'functional']".format(representation))
 
     # ======== stage-one for two-stage models ========#
-    events_dir = '../stage1_compose/hooktheory_events/lead_sheet_chord11_{}'.format(representation)
+    events_dir = 'events/stage1/hooktheory_events/lead_sheet_chord11_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=False, add_emotion=True, add_tempo=False,
                       num_emotion=2, relative=relative, event_pos=1)
 
-    events_dir = '../stage1_compose/emopia_events/lead_sheet_chord11_{}_adjusted_clean'.format(representation)
+    events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=False, add_emotion=True, add_tempo=False,
                       num_emotion=2, relative=relative, event_pos=1)
 
     # ======== stage-two for two-stage models ========#
-    events_dir = '../stage2_accompaniment/pop1k7_events/full_song_chorder_{}'.format(representation)
+    events_dir = 'events/stage2/pop1k7_events/full_song_chorder_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=2)
 
-    events_dir = '../stage2_accompaniment/emopia_events/full_song_chord11_{}_adjusted_clean'.format(representation)
+    events_dir = 'events/stage2/emopia_events/full_song_chord11_{}_adjusted_clean'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=2)
 
     # ======== one-stage models ========#
-    events_dir = '../stage1_compose/pop1k7_events/full_song_chorder_{}'.format(representation)
+    events_dir = 'events/stage1/pop1k7_events/full_song_chorder_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=1)
 
-    events_dir = '../stage1_compose/emopia_events/full_song_chord11_{}_adjusted'.format(representation)
+    events_dir = 'events/stage1/emopia_events/full_song_chord11_{}_adjusted'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=1)

@@ -1,9 +1,9 @@
 data_loader:
   batch_size: 4
-  data_path: pop1k7_events/full_song_chorder_{}/events
-  train_split: pop1k7_events/data_splits/train.pkl
-  val_split: pop1k7_events/data_splits/valid.pkl
-  vocab_path: pop1k7_events/full_song_chorder_{}/dictionary.pkl
+  data_path: events/stage2/pop1k7_events/full_song_chorder_{}/events
+  train_split: events/stage2/pop1k7_events/data_splits/train.pkl
+  val_split: events/stage2/pop1k7_events/data_splits/valid.pkl
+  vocab_path: events/stage2/pop1k7_events/full_song_chorder_{}/dictionary.pkl
 model:
   d_embed: 512
   d_ff: 2048

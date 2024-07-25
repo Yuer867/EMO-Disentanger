@@ -34,7 +34,7 @@ def split_emopia(output_dir):
 def split_hooktheory(output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
-    data_home = '../stage1_compose/hooktheory_events/lead_sheet_chord11_functional/events'
+    data_home = 'events/stage1/hooktheory_events/lead_sheet_chord11_functional/events'
     pkl_files = os.listdir(data_home)
     train_set, valid_set = train_test_split(pkl_files, test_size=0.1, random_state=42)
 
@@ -47,8 +47,8 @@ def split_hooktheory(output_dir):
 
 if __name__ == '__main__':
     # stage1_compose
-    split_emopia('../stage1_compose/emopia_events/data_splits')
-    split_hooktheory('../stage1_compose/hooktheory_events/data_splits')
+    split_emopia('events/stage1/emopia_events/data_splits')
+    split_hooktheory('events/stage1/hooktheory_events/data_splits')
 
     # stage2_accompaniment
-    split_emopia('../stage2_accompaniment/emopia_events/data_splits')
+    split_emopia('events/stage2/emopia_events/data_splits')

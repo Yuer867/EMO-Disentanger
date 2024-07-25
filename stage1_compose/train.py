@@ -193,8 +193,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-c', '--configuration',
-                          choices=['config/hooktheory_pretrain.yaml', 'config/emopia_finetune.yaml',
-                                   'config/pop1k7_pretrain.yaml', 'config/emopia_finetune_full.yaml'],
+                          choices=['stage1_compose/config/hooktheory_pretrain.yaml',
+                                   'stage1_compose/config/emopia_finetune.yaml',
+                                   'stage1_compose/config/pop1k7_pretrain.yaml',
+                                   'stage1_compose/config/emopia_finetune_full.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['absolute', 'functional'],
@@ -239,8 +241,8 @@ if __name__ == '__main__':
     )
 
     val_dset = SkylineFullSongTransformerDataset(
-        config['data']['data_dir'],
-        config['data']['vocab_path'],
+        config['data']['data_dir'].format(representation),
+        config['data']['vocab_path'].format(representation),
         pieces=pickle_load(config['data']['val_split']),
         do_augment=False,
         model_dec_seqlen=config['model']['decoder']['tgt_len'],

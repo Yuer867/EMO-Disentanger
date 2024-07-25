@@ -1,7 +1,7 @@
 device: cuda
-pretrained_optim_path: null # ckpt/hooktheory_key_s2000/optim/ep015_loss0.584_optim.pt
-pretrained_param_path: null # ckpt/hooktheory_key_s2000/params/ep015_loss0.584_params.pt
-inference_param_path:  ckpt/emopia_key_b4_h200_adjusted_clean_scratch/params/ep024_loss0.742_params.pt # ckpt/emopia_reduced_functional/params/ep030_loss0.534_params.pt
+pretrained_optim_path: null
+pretrained_param_path: null
+inference_param_path:  best_weight/Functional-two/emopia_lead_sheet_finetune/ep016_loss0.685_params.pt
 
 model:
   d_word_embed: 512
@@ -13,13 +13,13 @@ model:
     d_ff: 2048
     dropout: 0.1
     mem_len: 0
-    tgt_len: 512  # 1024
+    tgt_len: 512
 
 data:
-  data_dir: emopia_events/lead_sheet_chord11_{}_adjusted_clean/events
-  train_split: emopia_events/data_splits/train.pkl
-  val_split: emopia_events/data_splits/valid.pkl
-  vocab_path: emopia_events/lead_sheet_chord11_{}_adjusted_clean/dictionary.pkl
+  data_dir: events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/events
+  train_split: events/stage1/emopia_events/data_splits/train.pkl
+  val_split: events/stage1/emopia_events/data_splits/valid.pkl
+  vocab_path: events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/dictionary.pkl
   batch_size: 4
   max_n_seg: 1
 

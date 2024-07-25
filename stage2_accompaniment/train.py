@@ -179,7 +179,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-c', '--configuration',
-                          choices=['config/pop1k7_pretrain.yaml', 'config/emopia_finetune.yaml'],
+                          choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
+                                   'stage2_accompaniment/config/emopia_finetune.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['absolute', 'functional'],

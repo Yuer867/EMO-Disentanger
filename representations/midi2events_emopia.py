@@ -712,21 +712,21 @@ if __name__ == '__main__':
     if event_type == 'lead':
         num_emotion = 2
         emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo_clean'
-        lead_sheet_events_dir = '../stage1_compose/emopia_events/lead_sheet_chord11_{}_adjusted_clean/events'.format(
+        lead_sheet_events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/events'.format(
             representation)
         os.makedirs(lead_sheet_events_dir, exist_ok=True)
         print('save dir:', lead_sheet_events_dir)
     elif event_type == 'lead2full':
         num_emotion = 4
         emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo_clean'
-        full_song_events_dir = '../stage2_accompaniment/emopia_events/full_song_chord11_{}_adjusted_clean/events'.format(
+        full_song_events_dir = 'events/stage2/emopia_events/full_song_chord11_{}_adjusted_clean/events'.format(
             representation)
         os.makedirs(full_song_events_dir, exist_ok=True)
         print('save dir:', full_song_events_dir)
     elif event_type == 'full':
         num_emotion = 4
         emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo'
-        full_song_events_dir = '../stage1_compose/emopia_events/full_song_chord11_{}_adjusted/events'.format(
+        full_song_events_dir = 'events/stage1/emopia_events/full_song_chord11_{}_adjusted/events'.format(
             representation)
         os.makedirs(full_song_events_dir, exist_ok=True)
         print('save dir:', full_song_events_dir)

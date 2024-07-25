@@ -341,16 +341,17 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-c', '--configuration',
-                          choices=['config/pop1k7_pretrain.yaml', 'config/emopia_finetune.yaml'],
+                          choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
+                                   'stage2_accompaniment/config/emopia_finetune.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['absolute', 'functional'],
                           help='representation for symbolic music', required=True)
     parser.add_argument('-i', '--inference_params',
-                        default='emo_harmonizer_ckpt_functional/best_params.pt',
+                        default='best_weight/Functional-two/emopia_acccompaniment_finetune/ep300_loss0.338_params.pt',
                         help='inference parameters')
     parser.add_argument('-o', '--output_dir',
-                        default='generation/emopia_functional_rule',
+                        default='generation/emopia_functional_two',
                         help='output directory')
     parser.add_argument('-p', '--play_midi',
                         default=False,

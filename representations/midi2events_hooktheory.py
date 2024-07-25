@@ -267,7 +267,7 @@ if __name__ == '__main__':
 
     # convert midi to pkl
     print('convert midi to lead sheet ...')
-    lead_sheet_events_dir = '../stage1_compose/hooktheory_events/lead_sheet_chord11_{}/events'.format(representation)
+    lead_sheet_events_dir = 'events/stage1/hooktheory_events/lead_sheet_chord11_{}/events'.format(representation)
     os.makedirs(lead_sheet_events_dir, exist_ok=True)
     print('save dir:', lead_sheet_events_dir)
 

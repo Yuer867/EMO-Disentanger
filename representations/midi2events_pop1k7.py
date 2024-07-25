@@ -278,9 +278,9 @@ if __name__ == '__main__':
     old_dir = 'midi_data/pop1k7/pop1k7_leedsheet2midi'
     event_type = args.event_type
     if event_type == 'lead2full':
-        new_dir = '../stage2_accompaniment/pop1k7_events/full_song_chorder_{}/events'.format(representation)
+        new_dir = 'events/stage2/pop1k7_events/full_song_chorder_{}/events'.format(representation)
     elif event_type == 'full':
-        new_dir = '../stage1_compose/pop1k7_events/full_song_chorder_{}/events'.format(representation)
+        new_dir = 'events/stage1/pop1k7_events/full_song_chorder_{}/events'.format(representation)
     os.makedirs(new_dir, exist_ok=True)
     print(new_dir)
 
