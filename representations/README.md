@@ -28,10 +28,10 @@ python3 representations/midi2events_hooktheory.py --representation=functional
 1. Two conversion options are provided for different generation stages with functional representation (`--representation=functional`) and REMI (`--representation=absolute`).
 ```angular2html
 # functional representation for performance generation conditioned on lead sheet
-python3 representations/midi2events_emopia.py --representation=functional --event_type=lead2full
+python3 representations/midi2events_pop1k7.py --representation=functional --event_type=lead2full
 
 # functional representation for performance generation from scratch
-python3 representations/midi2events_emopia.py --representation=functional --event_type=full
+python3 representations/midi2events_pop1k7.py --representation=functional --event_type=full
 ```
 
 ## Build Vocabulary

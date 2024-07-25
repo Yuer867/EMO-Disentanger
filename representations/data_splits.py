@@ -27,8 +27,9 @@ def split_emopia(output_dir):
         valid_set.append(test.iloc[i].clip_name[:-4] + '.pkl')
     pickle.dump(valid_set, open(os.path.join(output_dir, 'valid.pkl'), 'wb'))
 
-    print('Emopia: ', len(train_set) + len(valid_set))
-    print('train, valid:', len(train_set), len(valid_set))
+    print(' > num files: ', len(train_set) + len(valid_set))
+    print(' > train, valid:', len(train_set), len(valid_set))
+    print()
 
 
 def split_hooktheory(output_dir):
@@ -41,14 +42,19 @@ def split_hooktheory(output_dir):
     pickle.dump(train_set, open(os.path.join(output_dir, 'train.pkl'), 'wb'))
     pickle.dump(valid_set, open(os.path.join(output_dir, 'valid.pkl'), 'wb'))
 
-    print('HookTheory: ', len(train_set) + len(valid_set))
-    print('train, valid:', len(train_set), len(valid_set))
+    print(' > num files: ', len(train_set) + len(valid_set))
+    print(' > train, valid:', len(train_set), len(valid_set))
+    print()
 
 
 if __name__ == '__main__':
     # stage1_compose
+    print('events/stage1/emopia_events/data_splits')
     split_emopia('events/stage1/emopia_events/data_splits')
+
+    print('events/stage1/hooktheory_events/data_splits')
     split_hooktheory('events/stage1/hooktheory_events/data_splits')
 
     # stage2_accompaniment
+    print('events/stage2/emopia_events/data_splits')
     split_emopia('events/stage2/emopia_events/data_splits')

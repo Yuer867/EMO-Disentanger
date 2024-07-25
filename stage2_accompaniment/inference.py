@@ -362,7 +362,7 @@ if __name__ == '__main__':
     train_conf = yaml.load(open(train_conf_path, 'r'), Loader=yaml.FullLoader)
     print(train_conf)
 
-    representation = args.representatiossn
+    representation = args.representation
     if representation == 'absolute':
         relative_melody = False
     elif representation == 'functional':
@@ -442,8 +442,8 @@ if __name__ == '__main__':
             emotion = dset.event2idx['Emotion_{}'.format(e)]
             tempo = dset.event2idx['Tempo_{}'.format(110)]
             key, lead_sheet_events = read_generated_events(file, dset.event2idx)
-            print(key)
             if representation in ['functional', 'key']:
+                print(key)
                 primer = [emotion, dset.event2idx[key], tempo]
             elif representation == 'absolute':
                 primer = [emotion, tempo]

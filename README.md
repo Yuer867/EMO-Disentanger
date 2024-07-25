@@ -85,7 +85,7 @@ python3 stage1_compose/train.py \
         --configuration=stage1_compose/config/hooktheory_pretrain.yaml \
         --representation=functional
 
-# finetune on EMOPIA
+# finetune on EMOPIA (remember to add pretrained params in `emopia_finetune.yaml`)
 python3 stage1_compose/train.py \
         --configuration=stage1_compose/config/emopia_finetune.yaml \
         --representation=functional
@@ -97,7 +97,7 @@ python3 stage2_accompaniment/train.py \
         --configuration=stage2_accompaniment/config/pop1k7_pretrain.yaml \
         --representation=functional 
 
-# finetune on EMOPIA
+# finetune on EMOPIA (remember to add pretrained params in `emopia_finetune.yaml`)
 python3 stage2_accompaniment/train.py \
         --configuration=stage2_accompaniment/config/emopia_finetune.yaml \
         --representation=functional
