@@ -109,7 +109,7 @@ If you find this project useful, please cite our paper:
 @inproceedings{emodisentanger2024,
   author = {Jingyue Huang and Ke Chen and Yi-Hsuan Yang},
   title = {Emotion-driven Piano Music Generation via Two-stage Disentanglement and Functional Representation},
-  booktitle={Proc. Int. Society for Music Information Retrieval Conf.},
+  booktitle={Proceedings of the International Society for Music Information Retrieval Conference, {ISMIR}},
   year = {2024}
 }
 ```
