@@ -1,7 +1,7 @@
 # EMO-Disentanger
 This is the official repository of ISMIR 2024 paper "Emotion-driven Piano Music Generation via Two-stage Disentanglement and Functional Representation".
 
-[Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) | [Processed data](https://drive.google.com/file/d/1U9V5htFjgS9Cj59nJCCssbA7IXfagzwb/view?usp=drive_link)
+[Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) | [Processed data](https://drive.google.com/file/d/1U9V5htFjgS9Cj59nJCCssbA7IXfagzwb/view?usp=drive_link)
 
 ## Environment
 * **Python 3.8** and **CUDA 10.2** recommended
