@@ -1,7 +1,7 @@
 # EMO-Disentanger
 This is the official repository of ISMIR 2024 paper "Emotion-driven Piano Music Generation via Two-stage Disentanglement and Functional Representation".
 
-| [Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) | [Processed data](https://drive.google.com/file/d/1U9V5htFjgS9Cj59nJCCssbA7IXfagzwb/view?usp=drive_link) |
+| [Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) |
 
 ## Environment
 * **Python 3.8** and **CUDA 10.2** recommended
@@ -30,7 +30,7 @@ tar -xzvf SalamanderGrandPiano-SF2-V3+20200602.tar.xz
 
 ### Emotion-driven piano performance generation (with our trained models)
 **Method: Two-stage generation with functional representation**
-1. Download and unzip [events](https://drive.google.com/file/d/1qvJfcXOftdKk3Bd0Lo1SaCsTltT_M3tu/view?usp=drive_link) and the [best weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) (make sure you're in repository root directory).
+1. Download and unzip [events](https://drive.google.com/file/d/1NRisx-FpjcsXov1jmtrbAhtFBFBkGRgW/view?usp=sharing) and the [best weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) (make sure you're in repository root directory).
 2. Stage1: Generate lead sheet with **Positive** or **Negative** emotion conditions (i.e., Valence Modeling).
 ```angular2html
 python3 stage1_compose/inference.py \
@@ -149,8 +149,8 @@ python3 stage2_accompaniment/train.py \
 We open source the processed midi data as follows:
 * [EMOPIA+](https://zenodo.org/records/13122742) for fine-tuning both stages, derived from emotion-annotated multi-modal dataset [EMOPIA](https://arxiv.org/abs/2108.01374). 
   * We applied [Midi_Toolkit](https://github.com/RetroCirce/Midi_Toolkit) for melody extraction and [link](https://github.com/Dsqvival/hierarchical-structure-analysis/tree/main/preprocessing/exported_midi_chord_recognition) for chord recognition to extract lead sheet from piano performance. 
-  * To refine key signatures, we applied both MIDI-based ([Midi toolbox](https://github.com/miditoolbox/)) and audio-based ([madmom](https://github.com/CPJKU/madmom)) key detection methods and corrected the clips where the two methods disagreed.
-* [Pop1K7-emo](https://zenodo.org/records/13143907) for pretraining second stage, derived from piano performance dataset [AILabs.tw Pop1K7 (Pop1K7)](https://github.com/YatingMusic/compound-word-transformer).
+  * To refine key signatures, we applied both MIDI-based ([Midi toolbox](https://github.com/miditoolbox/)) and audio-based ([madmom](https://github.com/CPJKU/madmom)) key detection methods and manually corrected the clips where the two methods disagreed.
+* [Pop1K7-emo](https://zenodo.org/records/13143907) for pretraining second stage, derived from piano performance dataset [AILabs.tw Pop1K7](https://github.com/YatingMusic/compound-word-transformer).
   * Please refer to [Compound Work Transformer](https://arxiv.org/abs/2101.02402) for lead sheet extraction algorithms.
   * Key signatures are detected using [Midi toolbox](https://github.com/miditoolbox/).
 
