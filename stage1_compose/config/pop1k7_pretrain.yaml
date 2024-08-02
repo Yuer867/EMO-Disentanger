@@ -35,5 +35,5 @@ training:
   log_interval: 50
 
 output:
-    ckpt_dir: ckpt/pop1k7_{}
+    ckpt_dir: ckpt/stage1/pop1k7_full_song_{}
     ckpt_interval: 5

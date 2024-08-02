@@ -35,5 +35,5 @@ training:
   log_interval: 50
 
 output:
-    ckpt_dir: ckpt/emopia_lead_sheet_{}
+    ckpt_dir: ckpt/stage1/emopia_lead_sheet_{}
     ckpt_interval: 4

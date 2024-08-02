@@ -1,9 +1,9 @@
 data_loader:
   batch_size: 4
-  data_path: pop1k7_events/full_song_chorder_{}/events
-  train_split: pop1k7_events/data_splits/train.pkl
-  val_split: pop1k7_events/data_splits/valid.pkl
-  vocab_path: pop1k7_events/full_song_chorder_{}/dictionary.pkl
+  data_path: events/stage2/pop1k7_events/full_song_chorder_{}/events
+  train_split: events/stage2/pop1k7_events/data_splits/train.pkl
+  val_split: events/stage2/pop1k7_events/data_splits/valid.pkl
+  vocab_path: events/stage2/pop1k7_events/full_song_chorder_{}/dictionary.pkl
 model:
   d_embed: 512
   d_ff: 2048
@@ -17,7 +17,7 @@ model:
   n_segment_types: 2
 training:
   gpuid: 0
-  ckpt_dir: ckpt/pop1k7_full_song_{}_gpt2
+  ckpt_dir: ckpt/stage2/pop1k7_full_song_{}_gpt2
   ckpt_interval: 10       # epochs
   log_interval: 50       # steps
   lr: 1.0e-04

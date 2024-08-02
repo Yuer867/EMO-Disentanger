@@ -150,7 +150,7 @@ We open source the processed midi data as follows:
 * [EMOPIA+](https://zenodo.org/records/13122742) for fine-tuning both stages, derived from emotion-annotated multi-modal dataset [EMOPIA](https://arxiv.org/abs/2108.01374). 
   * We applied [Midi_Toolkit](https://github.com/RetroCirce/Midi_Toolkit) for melody extraction and [link](https://github.com/Dsqvival/hierarchical-structure-analysis/tree/main/preprocessing/exported_midi_chord_recognition) for chord recognition to extract lead sheet from piano performance. 
   * To refine key signatures, we applied both MIDI-based ([Midi toolbox](https://github.com/miditoolbox/)) and audio-based ([madmom](https://github.com/CPJKU/madmom)) key detection methods and manually corrected the clips where the two methods disagreed.
-* [Pop1K7-emo](https://zenodo.org/records/13143907) for pretraining second stage, derived from piano performance dataset [AILabs.tw Pop1K7](https://github.com/YatingMusic/compound-word-transformer).
+* [Pop1K7-emo](https://zenodo.org/records/13167761) for pretraining second stage, derived from piano performance dataset [AILabs.tw Pop1K7](https://github.com/YatingMusic/compound-word-transformer).
   * Please refer to [Compound Work Transformer](https://arxiv.org/abs/2101.02402) for lead sheet extraction algorithms.
   * Key signatures are detected using [Midi toolbox](https://github.com/miditoolbox/).
 

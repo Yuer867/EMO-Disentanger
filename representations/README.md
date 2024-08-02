@@ -27,7 +27,7 @@ python3 representations/midi2events_hooktheory.py --representation=functional
 ```
 
 ### Pop1k7
-1. Download and unzip [Pop1K7-emo](https://zenodo.org/records/13143907) in the `midi_data` folder.
+1. Download and unzip [Pop1K7-emo](https://zenodo.org/records/13167761) in the `midi_data` folder.
 2. Put processed dataset [pop1k7_leedsheet2midi](https://huggingface.co/slseanwu/compose-and-embellish-pop1k7/tree/main/datasets/stage02_embellish) provided by [Compose & Embellish](https://github.com/slSeanWU/Compose_and_Embellish) into `midi_data/Pop1K7-emo`.
 1. Two conversion types are needed for different generation stages with functional representation (`--representation=functional`) or REMI (`--representation=remi`).
 ```angular2html

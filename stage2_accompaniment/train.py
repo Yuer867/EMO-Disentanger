@@ -197,7 +197,9 @@ if __name__ == "__main__":
                           help='model backbone', required=True)
     required.add_argument('-c', '--configuration',
                           choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
-                                   'stage2_accompaniment/config/emopia_finetune.yaml'],
+                                   'stage2_accompaniment/config/pop1k7_pretrain_gpt2.yaml',
+                                   'stage2_accompaniment/config/emopia_finetune.yaml',
+                                   'stage2_accompaniment/config/emopia_finetune_gpt2.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['remi', 'functional'],

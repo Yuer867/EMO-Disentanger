@@ -17,7 +17,7 @@ model:
   n_segment_types: 2
 training:
   gpuid: 0
-  ckpt_dir: ckpt/pop1k7_full_song_{}
+  ckpt_dir: ckpt/stage2/pop1k7_full_song_{}
   ckpt_interval: 10       # epochs
   log_interval: 50       # steps
   feat_redraw_prob: 0.05
