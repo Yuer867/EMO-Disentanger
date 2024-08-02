@@ -1,7 +1,7 @@
 # EMO-Disentanger
 This is the official repository of ISMIR 2024 paper "Emotion-driven Piano Music Generation via Two-stage Disentanglement and Functional Representation".
 
-[Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) | [Processed data](https://drive.google.com/file/d/1U9V5htFjgS9Cj59nJCCssbA7IXfagzwb/view?usp=drive_link)
+| [Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) | [Processed data](https://drive.google.com/file/d/1U9V5htFjgS9Cj59nJCCssbA7IXfagzwb/view?usp=drive_link) |
 
 ## Environment
 * **Python 3.8** and **CUDA 10.2** recommended
@@ -10,9 +10,13 @@ This is the official repository of ISMIR 2024 paper "Emotion-driven Piano Music 
 pip install -r requirements.txt
 ```
 
-* Install [fast transformer](https://github.com/idiap/fast-transformers) (required)
+* For stage2, install [fast transformer](https://github.com/idiap/fast-transformers) or transformers (required)
 ```
+# fast-transformers (the package used in the paper, but may not work in some cuda versions)
 pip install --user pytorch-fast-transformers
+
+# transformers
+pip install transformers
 ```
 
 * Install [midi2audio](https://github.com/bzamecnik/midi2audio) to synthesize generated MIDI to audio (optional)
@@ -37,11 +41,22 @@ python3 stage1_compose/inference.py \
         --output_dir=generation/emopia_functional_two
 ```
 3. Stage2: Generate music performance based on generated lead sheet in stage1 to convey **4Q** emotions (i.e., Arousal Modeling).
+* (Option 1) with Performer backbone (install fast-transformers)
 ```angular2html
 python3 stage2_accompaniment/inference.py \
+        --model_type=performer \
         --configuration=stage2_accompaniment/config/emopia_finetune.yaml \
         --representation=functional \
         --inference_params=best_weight/Functional-two/emopia_acccompaniment_finetune/ep300_loss0.338_params.pt \
+        --output_dir=generation/emopia_functional_two
+```
+* (Option 2) with GPT-2 backbone (install transformers)
+```angular2html
+python3 stage2_accompaniment/inference.py \
+        --model_type=gpt2 \
+        --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
+        --representation=functional \
+        --inference_params=best_weight/Functional-two-gpt2/emopia_acccompaniment_finetune/ep300_loss0.338_params.pt \
         --output_dir=generation/emopia_functional_two
 ```
 4. To output synthesized audio together with midi files, add `--play_midi` in the commands.
@@ -59,10 +74,20 @@ python3 stage1_compose/inference.py \
         --output_dir=generation/emopia_remi_two
 
 # stage2
+# (Option 1) with Performer backbone (install fast-transformers)
 python3 stage2_accompaniment/inference.py \
+        --model_type=performer \
         --configuration=stage2_accompaniment/config/emopia_finetune.yaml \
         --representation=absolute \
         --inference_params=best_weight/REMI-two/emopia_acccompaniment_finetune/ep300_loss0.350_params.pt \
+        --output_dir=generation/emopia_remi_two
+
+# (Option 2) with GPT-2 backbone (install transformers)
+python3 stage2_accompaniment/inference.py \
+        --model_type=gpt2 \
+        --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
+        --representation=absolute \
+        --inference_params=best_weight/REMI-two-gpt2/emopia_acccompaniment_finetune/ep300_loss0.350_params.pt \
         --output_dir=generation/emopia_remi_two
 ```
 2. For one-stage generation with REMI (baseline):
@@ -77,7 +102,7 @@ python3 stage1_compose/inference.py \
 
 ## Train the model by yourself
 Use **Two-stage generation with functional representation** as an example.
-1. Use the provided [events](https://drive.google.com/file/d/1qvJfcXOftdKk3Bd0Lo1SaCsTltT_M3tu/view?usp=drive_link) directly or convert MIDI to events following the [steps](https://github.com/Yuer867/EMO-Disentanger/tree/main/representations#readme).
+1. Use the provided [events](https://drive.google.com/file/d/1NRisx-FpjcsXov1jmtrbAhtFBFBkGRgW/view?usp=sharing) directly or convert MIDI to events following the [steps](https://github.com/Yuer867/EMO-Disentanger/tree/main/representations#readme).
 2. Stage1: Valence Modeling (lead sheet generation)
 ```angular2html
 # pre-train on HookTheory
@@ -91,17 +116,43 @@ python3 stage1_compose/train.py \
         --representation=functional
 ```
 3. Stage2: Arousal Modeling (performance generation)
+* (Option 1) with Performer backbone (install fast-transformers)
 ```angular2html
 # pre-train on Pop1k7
 python3 stage2_accompaniment/train.py \
+        --model_type=performer \
         --configuration=stage2_accompaniment/config/pop1k7_pretrain.yaml \
         --representation=functional 
 
 # finetune on EMOPIA (remember to add pretrained params in `emopia_finetune.yaml`)
 python3 stage2_accompaniment/train.py \
+        --model_type=performer \
         --configuration=stage2_accompaniment/config/emopia_finetune.yaml \
         --representation=functional
 ```
+* (Option 2) with GPT-2 backbone (install transformers)
+```angular2html
+# pre-train on Pop1k7
+python3 stage2_accompaniment/train.py \
+        --model_type=gpt2 \
+        --configuration=stage2_accompaniment/config/pop1k7_pretrain_gpt2.yaml \
+        --representation=functional 
+
+# finetune on EMOPIA (remember to add pretrained params in `emopia_finetune_gpt2.yaml`)
+python3 stage2_accompaniment/train.py \
+        --model_type=gpt2 \
+        --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
+        --representation=functional
+```
+
+## Dataset
+We open source the processed midi data as follows:
+* [EMOPIA+](https://zenodo.org/records/13122742) for fine-tuning both stages, derived from emotion-annotated multi-modal dataset [EMOPIA](https://arxiv.org/abs/2108.01374). 
+  * We applied [Midi_Toolkit](https://github.com/RetroCirce/Midi_Toolkit) for melody extraction and [link](https://github.com/Dsqvival/hierarchical-structure-analysis/tree/main/preprocessing/exported_midi_chord_recognition) for chord recognition to extract lead sheet from piano performance. 
+  * To refine key signatures, we applied both MIDI-based ([Midi toolbox](https://github.com/miditoolbox/)) and audio-based ([madmom](https://github.com/CPJKU/madmom)) key detection methods and corrected the clips where the two methods disagreed.
+* [Pop1K7-emo](https://zenodo.org/records/13143907) for pretraining second stage, derived from piano performance dataset [AILabs.tw Pop1K7 (Pop1K7)](https://github.com/YatingMusic/compound-word-transformer).
+  * Please refer to [Compound Work Transformer](https://arxiv.org/abs/2101.02402) for lead sheet extraction algorithms.
+  * Key signatures are detected using [Midi toolbox](https://github.com/miditoolbox/).
 
 ## Citation
 If you find this project useful, please cite our paper:

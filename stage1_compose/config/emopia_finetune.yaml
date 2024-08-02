@@ -16,10 +16,10 @@ model:
     tgt_len: 512
 
 data:
-  data_dir: events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/events
+  data_dir: events/stage1/emopia_events/lead_sheet_chord11_{}/events
   train_split: events/stage1/emopia_events/data_splits/train.pkl
   val_split: events/stage1/emopia_events/data_splits/valid.pkl
-  vocab_path: events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/dictionary.pkl
+  vocab_path: events/stage1/emopia_events/lead_sheet_chord11_{}/dictionary.pkl
   batch_size: 4
   max_n_seg: 1
 

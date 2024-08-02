@@ -1,6 +1,6 @@
 import os
 import json
-import pickle
+import pickle5 as pickle
 import argparse
 import numpy as np
 from tqdm import tqdm
@@ -693,7 +693,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     required.add_argument('-e', '--event_type',
                           choices=['lead', 'lead2full', 'full'],
@@ -703,30 +703,28 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     representation = args.representation
-    if representation == 'absolute':
+    if representation == 'remi':
         transpose_to_C, relative_chord, relative_melody = False, False, False
     elif representation == 'functional':
         transpose_to_C, relative_chord, relative_melody = False, True, True
 
+    emopia_data_home = 'midi_data/EMOPIA+/midis'
     event_type = args.event_type
     if event_type == 'lead':
         num_emotion = 2
-        emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo_clean'
-        lead_sheet_events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean/events'.format(
+        lead_sheet_events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}/events'.format(
             representation)
         os.makedirs(lead_sheet_events_dir, exist_ok=True)
         print('save dir:', lead_sheet_events_dir)
     elif event_type == 'lead2full':
         num_emotion = 4
-        emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo_clean'
-        full_song_events_dir = 'events/stage2/emopia_events/full_song_chord11_{}_adjusted_clean/events'.format(
+        full_song_events_dir = 'events/stage2/emopia_events/full_song_chord11_{}/events'.format(
             representation)
         os.makedirs(full_song_events_dir, exist_ok=True)
         print('save dir:', full_song_events_dir)
     elif event_type == 'full':
         num_emotion = 4
-        emopia_data_home = 'midi_data/EMOPIA/extracted_midis_480_chord11_tempo'
-        full_song_events_dir = 'events/stage1/emopia_events/full_song_chord11_{}_adjusted/events'.format(
+        full_song_events_dir = 'events/stage1/emopia_events/full_song_chord11_{}/events'.format(
             representation)
         os.makedirs(full_song_events_dir, exist_ok=True)
         print('save dir:', full_song_events_dir)
@@ -734,7 +732,7 @@ if __name__ == '__main__':
 
     # load dict for key
     # clip2keyname, _ = find_key_emopia()
-    with open('midi_data/EMOPIA/adjust_keyname.json', 'r') as f:
+    with open('midi_data/EMOPIA+/adjust_keyname.json', 'r') as f:
         clip2keyname = json.load(f)
 
     print('convert midi to events ...')

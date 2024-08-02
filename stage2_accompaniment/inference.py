@@ -10,7 +10,6 @@ from collections import defaultdict
 import torch
 
 from dataloader import REMISkylineToMidiTransformerDataset, pickle_load
-from model.music_performer import MusicPerformer
 from convert2midi import event_to_midi
 from convert_key import degree2pitch, roman2majorDegree, roman2minorDegree
 
@@ -19,7 +18,6 @@ sys.path.append('./model')
 max_bars = 128
 max_dec_inp_len = 2048
 
-temp, top_p = 1.1, 0.99
 emotion_events = ['Emotion_Q1', 'Emotion_Q2', 'Emotion_Q3', 'Emotion_Q4']
 samp_per_piece = 1
 
@@ -172,22 +170,6 @@ def word2event(word_seq, idx2event):
     return [idx2event[w] for w in word_seq]
 
 
-def extract_skyline_from_val_data(val_input, idx2event, event2idx):
-    tempo = val_input[0]
-
-    skyline_starts = np.where(val_input == event2idx['Track_Skyline'])[0].tolist()
-    midi_starts = np.where(val_input == event2idx['Track_Midi'])[0].tolist()
-
-    assert len(skyline_starts) == len(midi_starts)
-
-    skyline_bars = []
-    for st, ed in zip(skyline_starts, midi_starts):
-        bar_skyline_events = val_input[st + 1: ed].tolist()
-        skyline_bars.append(bar_skyline_events)
-
-    return tempo, skyline_bars
-
-
 def extract_midi_events_from_generation(key, events, relative_melody=False):
     if relative_melody:
         new_events = []
@@ -248,7 +230,8 @@ def midi_to_wav(midi_path, output_path):
 ################################################
 def generate_conditional(model, event2idx, idx2event, lead_sheet_events, primer,
                          max_events=10000, skip_check=False, max_bars=None,
-                         temp=1.2, top_p=0.9, inadmissibles=None):
+                         temp=1.2, top_p=0.9, inadmissibles=None,
+                         model_type="performer"):
     generated = primer + [event2idx['Track_LeadSheet']] + lead_sheet_events[0] + [event2idx['Track_Full']]
     # print(generated)
     seg_inp = [0 for _ in range(len(generated))]
@@ -274,12 +257,21 @@ def generate_conditional(model, event2idx, idx2event, lead_sheet_events, primer,
             dec_seg_inp = torch.tensor([seg_inp[-max_dec_inp_len:]]).long().to(next(model.parameters()).device)
 
         # sampling
-        logits = model(
-            dec_input,
-            seg_inp=dec_seg_inp,
-            keep_last_only=True,
-            attn_kwargs={'omit_feature_map_draw': steps > 0}
-        )
+        if model_type == "performer":
+            logits = model(
+                dec_input,
+                seg_inp=dec_seg_inp,
+                keep_last_only=True,
+                attn_kwargs={'omit_feature_map_draw': steps > 0}
+            )
+        else:
+            logits = model(
+                dec_input,
+                seg_inp=dec_seg_inp,
+                chord_inp=dec_chords_mhot,
+                keep_last_only=True,
+            )
+
         logits = (logits[0]).cpu().detach().numpy()
         probs = temperature(logits, temp, inadmissibles=inadmissibles)
         word = nucleus(probs, top_p)
@@ -340,12 +332,15 @@ if __name__ == '__main__':
     # configuration
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
+    required.add_argument('-m', '--model_type',
+                          choices=['performer', 'gpt2'],
+                          help='model backbone', required=True)
     required.add_argument('-c', '--configuration',
                           choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
                                    'stage2_accompaniment/config/emopia_finetune.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     parser.add_argument('-i', '--inference_params',
                         default='best_weight/Functional-two/emopia_acccompaniment_finetune/ep300_loss0.338_params.pt',
@@ -363,7 +358,7 @@ if __name__ == '__main__':
     print(train_conf)
 
     representation = args.representation
-    if representation == 'absolute':
+    if representation == 'remi':
         relative_melody = False
     elif representation == 'functional':
         relative_melody = True
@@ -386,12 +381,29 @@ if __name__ == '__main__':
     )
 
     model_conf = train_conf['model']
-    model = MusicPerformer(
-        dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
-        model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
-        use_segment_emb=model_conf['use_segemb'], n_segment_types=model_conf['n_segment_types'],
-        favor_feature_dims=model_conf['feature_map']['n_dims']
-    ).cuda()
+    model_type = args.model_type
+    if model_type == "performer":
+        from model.music_performer import MusicPerformer
+
+        model = MusicPerformer(
+            dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
+            model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
+            use_segment_emb=model_conf['use_segemb'], n_segment_types=model_conf['n_segment_types'],
+            favor_feature_dims=model_conf['feature_map']['n_dims']
+        ).cuda(gpuid)
+        temp, top_p = 1.1, 0.99
+    elif model_type == "gpt2":
+        from model.music_gpt2 import MusicGPT2
+
+        model = MusicGPT2(
+            dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
+            model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
+            use_segment_emb=model_conf['use_segemb'], n_segment_types=model_conf['n_segment_types']
+        ).cuda(gpuid)
+        temp, top_p = 1.2, 0.97
+    else:
+        raise NotImplementedError("Unsuppported model:", model_type)
+    print(f"[info] temp = {temp} | top_p = {top_p}")
 
     pretrained_dict = torch.load(inference_param_path, map_location='cpu')
     pretrained_dict = {
@@ -411,7 +423,7 @@ if __name__ == '__main__':
 
     if representation == 'functional':
         files = [os.path.join(gen_leadsheet_dir, i) for i in os.listdir(gen_leadsheet_dir) if 'roman.txt' in i]
-    elif representation in ['absolute', 'key']:
+    elif representation in ['remi', 'key']:
         files = [os.path.join(gen_leadsheet_dir, i) for i in os.listdir(gen_leadsheet_dir) if '.txt' in i]
 
     for file in files:
@@ -445,14 +457,14 @@ if __name__ == '__main__':
             if representation in ['functional', 'key']:
                 print(key)
                 primer = [emotion, dset.event2idx[key], tempo]
-            elif representation == 'absolute':
+            elif representation == 'remi':
                 primer = [emotion, tempo]
 
             with torch.no_grad():
                 generated = generate_conditional(model, dset.event2idx, dset.idx2event,
                                                  lead_sheet_events, primer=primer,
                                                  max_bars=max_bars, temp=temp, top_p=top_p,
-                                                 inadmissibles=None)
+                                                 inadmissibles=None, model_type=model_type)
 
             generated = word2event(generated, dset.idx2event)
             generated = extract_midi_events_from_generation(key, generated, relative_melody=relative_melody)

@@ -1,7 +1,7 @@
 import sys
 import os
 import random
-import pickle
+import pickle5 as pickle
 import argparse
 
 import yaml
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                                    'stage1_compose/config/emopia_finetune_full.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     required.add_argument('-m', '--mode',
                           choices=['lead_sheet', 'full_song'],

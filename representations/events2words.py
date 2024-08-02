@@ -1,5 +1,5 @@
 import os
-import pickle
+import pickle5 as pickle
 import argparse
 import numpy as np
 
@@ -123,19 +123,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     parser.add_argument('-e', '--num_emotion', default=2, help='number of emotion types')
     args = parser.parse_args()
     representation = args.representation
     num_emotion = args.num_emotion
 
-    if representation == 'absolute':
+    if representation == 'remi':
         relative = False
     elif representation == 'functional':
         relative = True
     else:
-        raise ValueError("invalid representation {}, choose from ['absolute', 'functional']".format(representation))
+        raise ValueError("invalid representation {}, choose from ['remi', 'functional']".format(representation))
 
     # ======== stage-one for two-stage models ========#
     events_dir = 'events/stage1/hooktheory_events/lead_sheet_chord11_{}'.format(representation)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
     events2dictionary(events_dir, add_velocity=False, add_emotion=True, add_tempo=False,
                       num_emotion=2, relative=relative, event_pos=1)
 
-    events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}_adjusted_clean'.format(representation)
+    events_dir = 'events/stage1/emopia_events/lead_sheet_chord11_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=False, add_emotion=True, add_tempo=False,
                       num_emotion=2, relative=relative, event_pos=1)
@@ -154,7 +154,7 @@ if __name__ == '__main__':
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=2)
 
-    events_dir = 'events/stage2/emopia_events/full_song_chord11_{}_adjusted_clean'.format(representation)
+    events_dir = 'events/stage2/emopia_events/full_song_chord11_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=2)
@@ -165,7 +165,7 @@ if __name__ == '__main__':
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=1)
 
-    events_dir = 'events/stage1/emopia_events/full_song_chord11_{}_adjusted'.format(representation)
+    events_dir = 'events/stage1/emopia_events/full_song_chord11_{}'.format(representation)
     print(events_dir)
     events2dictionary(events_dir, add_velocity=True, add_emotion=True, add_tempo=True,
                       num_emotion=4, relative=relative, event_pos=1)

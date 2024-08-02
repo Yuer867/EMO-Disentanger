@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-import pickle
+import pickle5 as pickle
 from sklearn.model_selection import train_test_split
 
 
@@ -9,9 +9,9 @@ def split_emopia(output_dir):
     os.makedirs(output_dir, exist_ok=True)
 
     # data split by running provided file: scripts/prepare_split.ipynb
-    train = pd.read_csv("midi_data/EMOPIA/split/train_clip.csv", index_col=0)
-    valid = pd.read_csv("midi_data/EMOPIA/split/val_clip.csv", index_col=0)
-    test = pd.read_csv("midi_data/EMOPIA/split/test_clip.csv", index_col=0)
+    train = pd.read_csv("midi_data/EMOPIA+/split/train_clip.csv", index_col=0)
+    valid = pd.read_csv("midi_data/EMOPIA+/split/val_clip.csv", index_col=0)
+    test = pd.read_csv("midi_data/EMOPIA+/split/test_clip.csv", index_col=0)
 
     # --- training dataset (train + valid) --- #
     train_set = []

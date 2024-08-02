@@ -1,7 +1,7 @@
 import os
 import gzip
 import json
-import pickle
+import pickle5 as pickle
 import argparse
 import numpy as np
 from tqdm import tqdm
@@ -212,19 +212,19 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     parser.add_argument('-e', '--num_emotion', default=2, help='number of emotion types')
     args = parser.parse_args()
     representation = args.representation
     num_emotion = args.num_emotion
 
-    if representation == 'absolute':
+    if representation == 'remi':
         transpose_to_C, relative_chord, relative_melody = False, False, False
     elif representation == 'functional':
         transpose_to_C, relative_chord, relative_melody = False, True, True
     else:
-        raise ValueError("invalid representation {}, choose from [absolute, functional]"
+        raise ValueError("invalid representation {}, choose from [remi, functional]"
                          .format(representation))
     print('whether transpose_to_C: {}, whether relative_chord: {}, whether relative_melody: {}'.
           format(transpose_to_C, relative_chord, relative_melody))

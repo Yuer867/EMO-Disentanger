@@ -8,8 +8,8 @@ import collections
 from tqdm import tqdm
 
 
-emopia_data_home = '../representations/midi_data/EMOPIA/'
-hooktheory_data_home = '../representations/midi_data/HookTheory'
+emopia_data_home = 'midi_data/EMOPIA+/'
+hooktheory_data_home = 'midi_data/HookTheory/'
 
 MAJOR_KEY = np.array(['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'])
 MINOR_KEY = np.array(['c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#', 'a', 'a#', 'b'])

@@ -161,7 +161,7 @@ def log_epoch(log_file, log_data, is_init=False):
     if is_init:
         with open(log_file, 'w') as f:
             f.write('{:4} {:8} {:12} {:12} {:12}\n'.format(
-                'ep', 'steps', 'ce_loss', 'total_acc', 'chord_acc', 'melody_acc', 'others_acc', 'ep_time', 'total_time'
+                'ep', 'steps', 'ce_loss', 'ep_time', 'total_time'
             ))
 
     with open(log_file, 'a') as f:
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                                    'stage1_compose/config/emopia_finetune_full.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     args = parser.parse_args()
 

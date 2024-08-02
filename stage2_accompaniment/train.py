@@ -11,7 +11,6 @@ import torch
 from torch import optim
 from torch.utils.data import DataLoader
 
-from model.music_performer import MusicPerformer
 from dataloader import REMISkylineToMidiTransformerDataset
 from utils import pickle_load
 
@@ -30,7 +29,7 @@ def log_epoch(log_file, log_data, is_init=False):
         ))
 
 
-def train_model(epoch, model, dloader, optim, sched, pad_token):
+def train_model(epoch, model, dloader, optim, sched, pad_token, model_type="performer"):
     model.train()
     recons_loss_rec = 0.
     accum_samples = 0
@@ -54,13 +53,21 @@ def train_model(epoch, model, dloader, optim, sched, pad_token):
         train_steps += 1
 
         # get logits from model
-        omit_feature_map_draw = random.random() > redraw_prob
-        dec_logits = model(
-            batch_dec_inp,
-            seg_inp=batch_track_mask,
-            chord_inp=None,
-            attn_kwargs={'omit_feature_map_draw': omit_feature_map_draw}
-        )
+        if model_type == "performer":
+            omit_feature_map_draw = random.random() > redraw_prob
+            dec_logits = model(
+                batch_dec_inp,
+                seg_inp=batch_track_mask,
+                chord_inp=None,
+                attn_kwargs={'omit_feature_map_draw': omit_feature_map_draw}
+            )
+        elif model_type == "gpt2":
+            omit_feature_map_draw = True  # dummy var here
+            dec_logits = model(
+                batch_dec_inp,
+                seg_inp=batch_track_mask,
+                chord_inp=None,
+            )
         losses = model.compute_loss(dec_logits, batch_dec_tgt)
 
         # clip gradient & update model
@@ -87,7 +94,7 @@ def train_model(epoch, model, dloader, optim, sched, pad_token):
             'step = {}, time_elapsed = {:.2f} secs | redraw: {}'.format(
                 epoch, batch_idx + 1, len(dloader), batch_inp_lens,
                 recons_loss_rec / accum_samples, total_acc,
-                chord_acc, melody_acc,  others_acc, train_steps,
+                chord_acc, melody_acc, others_acc, train_steps,
                 time.time() - st, (not omit_feature_map_draw)
             ))
 
@@ -119,7 +126,7 @@ def train_model(epoch, model, dloader, optim, sched, pad_token):
     return recons_loss_rec / accum_samples
 
 
-def validate(model, dloader, pad_token, rounds=1):
+def validate(model, dloader, pad_token, rounds=1, model_type="performer"):
     model.eval()
     loss_rec = []
     total_acc_rec = []
@@ -137,13 +144,20 @@ def validate(model, dloader, pad_token, rounds=1):
                 batch_chord_idx = batch_samples['chord_idx'].cuda(gpuid)
                 batch_melody_idx = batch_samples['melody_idx'].cuda(gpuid)
 
-                omit_feature_map_draw = random.random() > redraw_prob
-                dec_logits = model(
-                    batch_dec_inp,
-                    seg_inp=batch_track_mask,
-                    chord_inp=None,
-                    attn_kwargs={'omit_feature_map_draw': omit_feature_map_draw}
-                )
+                if model_type == "performer":
+                    omit_feature_map_draw = random.random() > redraw_prob
+                    dec_logits = model(
+                        batch_dec_inp,
+                        seg_inp=batch_track_mask,
+                        chord_inp=None,
+                        attn_kwargs={'omit_feature_map_draw': omit_feature_map_draw}
+                    )
+                elif model_type == "gpt2":
+                    dec_logits = model(
+                        batch_dec_inp,
+                        seg_inp=batch_track_mask,
+                        chord_inp=None,
+                    )
 
                 losses = model.compute_loss(dec_logits, batch_dec_tgt)
                 if not batch_idx % 5:
@@ -178,14 +192,29 @@ if __name__ == "__main__":
     # configuration
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
+    required.add_argument('-m', '--model_type',
+                          choices=['performer', 'gpt2'],
+                          help='model backbone', required=True)
     required.add_argument('-c', '--configuration',
                           choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
                                    'stage2_accompaniment/config/emopia_finetune.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     args = parser.parse_args()
+
+    model_type = args.model_type
+    if model_type == "performer":
+        from model.music_performer import MusicPerformer
+
+        model_klass = MusicPerformer
+    elif model_type == "gpt2":
+        from model.music_gpt2 import MusicGPT2
+
+        model_klass = MusicGPT2
+    else:
+        raise NotImplementedError("Unsuppported model:", model_type)
 
     train_conf_path = args.configuration
     train_conf = yaml.load(open(train_conf_path, 'r'), Loader=yaml.FullLoader)
@@ -200,7 +229,7 @@ if __name__ == "__main__":
     max_lr = train_conf_['lr']
     min_lr = train_conf_['lr_scheduler']['eta_min']
     lr_decay_steps = train_conf_['lr_scheduler']['T_max']
-    redraw_prob = train_conf_['feat_redraw_prob']
+    redraw_prob = train_conf_.get('feat_redraw_prob', 0.0)
     max_epochs = train_conf_['num_epochs']
     ckpt_dir = train_conf_['ckpt_dir'].format(representation)
     pretrained_param_path = train_conf_['trained_params']
@@ -248,14 +277,21 @@ if __name__ == "__main__":
     )
 
     # load model
-    model = MusicPerformer(
-        dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
-        model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
-        use_segment_emb=model_conf['use_segemb'],
-        n_segment_types=model_conf['n_segment_types'],
-        favor_feature_dims=model_conf['feature_map']['n_dims'],
-        use_chord_mhot_emb=False
-    ).cuda(gpuid)
+    if model_type == "performer":
+        model = model_klass(
+            dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
+            model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
+            use_segment_emb=model_conf['use_segemb'], n_segment_types=2,
+            favor_feature_dims=model_conf['feature_map']['n_dims'],
+            use_chord_mhot_emb=False
+        ).cuda(gpuid)
+    elif model_type == "gpt2":
+        model = model_klass(
+            dset.vocab_size, model_conf['n_layer'], model_conf['n_head'],
+            model_conf['d_model'], model_conf['d_ff'], model_conf['d_embed'],
+            use_segment_emb=model_conf['use_segemb'], n_segment_types=2,
+            use_chord_mhot_emb=False
+        ).cuda(gpuid)
 
     if pretrained_param_path:
         pretrained_dict = torch.load(pretrained_param_path, map_location='cpu')
@@ -293,7 +329,7 @@ if __name__ == "__main__":
     shutil.copy(train_conf_path, os.path.join(ckpt_dir, 'config.yaml'))
 
     for ep in range(max_epochs):
-        loss = train_model(ep + 1, model, dloader, optimizer, scheduler, dset.pad_token)
+        loss = train_model(ep + 1, model, dloader, optimizer, scheduler, dset.pad_token, model_type=model_type)
         if not (ep + 1) % ckpt_interval:
             torch.save(model.state_dict(),
                        os.path.join(params_dir, 'ep{:03d}_loss{:.3f}_params.pt'.format(ep + 1, loss))
@@ -303,7 +339,7 @@ if __name__ == "__main__":
                        )
         if not (ep + 1) % val_interval:
             val_losses, total_acc_rec, chord_acc_rec, melody_acc_rec, others_acc_rec = \
-                validate(model, val_dloader, val_dset.pad_token)
+                validate(model, val_dloader, val_dset.pad_token, model_type=model_type)
             with open(os.path.join(ckpt_dir, 'valloss.txt'), 'a') as f:
                 f.write("ep{:03d} | loss: {:.3f} | valloss: {:.3f} (±{:.3f}) | total_acc: {:.3f} | "
                         "chord_acc: {:.3f} | melody_acc: {:.3f} | others_acc: {:.3f}\n".format(

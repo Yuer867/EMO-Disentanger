@@ -1,26 +1,25 @@
 data_loader:
   batch_size: 4
-  data_path: events/stage2/pop1k7_events/full_song_chorder_{}/events
-  train_split: events/stage2/pop1k7_events/data_splits/train.pkl
-  val_split: events/stage2/pop1k7_events/data_splits/valid.pkl
-  vocab_path: events/stage2/pop1k7_events/full_song_chorder_{}/dictionary.pkl
+  data_path: pop1k7_events/full_song_chorder_{}/events
+  train_split: pop1k7_events/data_splits/train.pkl
+  val_split: pop1k7_events/data_splits/valid.pkl
+  vocab_path: pop1k7_events/full_song_chorder_{}/dictionary.pkl
 model:
   d_embed: 512
   d_ff: 2048
   d_model: 512
   feature_map:
     n_dims: 128
-  max_len: 3072
+  max_len: 2048
   n_head: 8
   n_layer: 12
   use_segemb: true
   n_segment_types: 2
 training:
   gpuid: 0
-  ckpt_dir: ckpt/pop1k7_full_song_{}
+  ckpt_dir: ckpt/pop1k7_full_song_{}_gpt2
   ckpt_interval: 10       # epochs
   log_interval: 50       # steps
-  feat_redraw_prob: 0.05
   lr: 1.0e-04
   lr_scheduler:
     T_max: 500000    # 160 epochs
@@ -30,3 +29,4 @@ training:
   trained_params: null
   inference_params: null
   warmup_steps: 200
+  accum_steps: 2

@@ -1,5 +1,5 @@
 import os
-import pickle
+import pickle5 as pickle
 import argparse
 import numpy as np
 from tqdm import tqdm
@@ -261,7 +261,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='')
     required = parser.add_argument_group('required arguments')
     required.add_argument('-r', '--representation',
-                          choices=['absolute', 'functional'],
+                          choices=['remi', 'functional'],
                           help='representation for symbolic music', required=True)
     required.add_argument('-e', '--event_type',
                           choices=['lead2full', 'full'],
@@ -270,12 +270,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     representation = args.representation
-    if representation == 'absolute':
+    if representation == 'remi':
         transpose_to_C, relative_chord, relative_melody = False, False, False
     elif representation == 'functional':
         transpose_to_C, relative_chord, relative_melody = False, True, True
 
-    old_dir = 'midi_data/pop1k7/pop1k7_leedsheet2midi'
+    old_dir = 'midi_data/Pop1K7-emo/pop1k7_leedsheet2midi'
     event_type = args.event_type
     if event_type == 'lead2full':
         new_dir = 'events/stage2/pop1k7_events/full_song_chorder_{}/events'.format(representation)
@@ -285,7 +285,7 @@ if __name__ == '__main__':
     print(new_dir)
 
     # read keyname of midi files
-    midi2key = json_read('midi_data/pop1k7/pop1k7_keyname.json')
+    midi2key = json_read('midi_data/Pop1K7-emo/pop1k7_keyname.json')
 
     samples = os.listdir(old_dir)
     for i in tqdm(range(len(samples))):

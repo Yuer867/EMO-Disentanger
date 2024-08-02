@@ -1,5 +1,5 @@
 import torch
-import pickle
+import pickle5 as pickle
 import csv
 import json
 
