@@ -68,7 +68,7 @@ python3 stage2_accompaniment/inference.py \
 # stage1
 python3 stage1_compose/inference.py \
         --configuration=stage1_compose/config/emopia_finetune.yaml \
-        --representation=absolute \
+        --representation=remi \
         --mode=lead_sheet \
         --inference_params=best_weight/REMI-two/emopia_lead_sheet_finetune/ep016_loss0.846_params.pt \
         --output_dir=generation/emopia_remi_two
@@ -78,7 +78,7 @@ python3 stage1_compose/inference.py \
 python3 stage2_accompaniment/inference.py \
         --model_type=performer \
         --configuration=stage2_accompaniment/config/emopia_finetune.yaml \
-        --representation=absolute \
+        --representation=remi \
         --inference_params=best_weight/REMI-two/emopia_acccompaniment_finetune/ep300_loss0.350_params.pt \
         --output_dir=generation/emopia_remi_two
 
@@ -86,7 +86,7 @@ python3 stage2_accompaniment/inference.py \
 python3 stage2_accompaniment/inference.py \
         --model_type=gpt2 \
         --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
-        --representation=absolute \
+        --representation=remi \
         --inference_params=best_weight/REMI-two-gpt2/emopia_acccompaniment_finetune/ep300_loss0.350_params.pt \
         --output_dir=generation/emopia_remi_two
 ```
@@ -94,7 +94,7 @@ python3 stage2_accompaniment/inference.py \
 ```angular2html
 python3 stage1_compose/inference.py \
         --configuration=stage1_compose/config/emopia_finetune_full.yaml \
-        --representation=absolute \
+        --representation=remi \
         --mode=full_song \
         --inference_params=best_weight/REMI-one/emopia_finetune/ep100_loss0.620_params.pt \
         --output_dir=generation/emopia_remi_one
