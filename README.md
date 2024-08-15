@@ -1,7 +1,7 @@
 # EMO-Disentanger
 This is the official repository of ISMIR 2024 paper "Emotion-driven Piano Music Generation via Two-stage Disentanglement and Functional Representation".
 
-| [Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) |
+[Paper](https://arxiv.org/abs/2407.20955) | [Demo page](https://emo-disentanger.github.io/) | [Model weights](https://drive.google.com/file/d/15Gc8PWbkoOeXCTrpDMKsgptoL17u49QG/view?usp=sharing)
 
 ## Environment
 * **Python 3.8** and **CUDA 10.2** recommended
@@ -30,7 +30,7 @@ tar -xzvf SalamanderGrandPiano-SF2-V3+20200602.tar.xz
 
 ### Emotion-driven piano performance generation (with our trained models)
 **Method: Two-stage generation with functional representation**
-1. Download and unzip [events](https://drive.google.com/file/d/1NRisx-FpjcsXov1jmtrbAhtFBFBkGRgW/view?usp=sharing) and the [best weights](https://drive.google.com/file/d/1eQoWuO-VzxtX-ZncQIoi87rqqcyKWeKz/view?usp=drive_link) (make sure you're in repository root directory).
+1. Download and unzip [events](https://drive.google.com/file/d/1NRisx-FpjcsXov1jmtrbAhtFBFBkGRgW/view?usp=sharing) and the [best weights](https://drive.google.com/file/d/15Gc8PWbkoOeXCTrpDMKsgptoL17u49QG/view?usp=sharing) (make sure you're in repository root directory).
 2. Stage1: Generate lead sheet with **Positive** or **Negative** emotion conditions (i.e., Valence Modeling).
 ```angular2html
 python3 stage1_compose/inference.py \
