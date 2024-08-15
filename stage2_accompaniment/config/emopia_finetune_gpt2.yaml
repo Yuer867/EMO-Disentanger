@@ -27,6 +27,6 @@ training:
   num_epochs: 1000
   trained_optim: null
   trained_params: null
-  inference_params: ckpt/emopia_full_song_absolute_adjust_e300_clean_2/params/ep300_loss0.350_params.pt
+  inference_params: best_weight/Functional-two/emopia_acccompaniment_finetune_gpt2/ep300_loss0.120_params.pt
   warmup_steps: 200
   accum_steps: 2

@@ -268,7 +268,6 @@ def generate_conditional(model, event2idx, idx2event, lead_sheet_events, primer,
             logits = model(
                 dec_input,
                 seg_inp=dec_seg_inp,
-                chord_inp=dec_chords_mhot,
                 keep_last_only=True,
             )
 
@@ -337,7 +336,9 @@ if __name__ == '__main__':
                           help='model backbone', required=True)
     required.add_argument('-c', '--configuration',
                           choices=['stage2_accompaniment/config/pop1k7_pretrain.yaml',
-                                   'stage2_accompaniment/config/emopia_finetune.yaml'],
+                                   'stage2_accompaniment/config/emopia_finetune.yaml',
+                                   'stage2_accompaniment/config/pop1k7_pretrain_gpt2.yaml',
+                                   'stage2_accompaniment/config/emopia_finetune_gpt2.yaml'],
                           help='configurations of training', required=True)
     required.add_argument('-r', '--representation',
                           choices=['remi', 'functional'],

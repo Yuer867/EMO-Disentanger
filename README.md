@@ -56,7 +56,7 @@ python3 stage2_accompaniment/inference.py \
         --model_type=gpt2 \
         --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
         --representation=functional \
-        --inference_params=best_weight/Functional-two-gpt2/emopia_acccompaniment_finetune/ep300_loss0.338_params.pt \
+        --inference_params=best_weight/Functional-two-gpt2/emopia_acccompaniment_finetune_gpt2/ep300_loss0.120_params.pt \
         --output_dir=generation/emopia_functional_two
 ```
 4. To output synthesized audio together with midi files, add `--play_midi` in the commands.
@@ -87,7 +87,7 @@ python3 stage2_accompaniment/inference.py \
         --model_type=gpt2 \
         --configuration=stage2_accompaniment/config/emopia_finetune_gpt2.yaml \
         --representation=remi \
-        --inference_params=best_weight/REMI-two-gpt2/emopia_acccompaniment_finetune/ep300_loss0.350_params.pt \
+        --inference_params=best_weight/REMI-two/emopia_acccompaniment_finetune_gpt2/ep300_loss0.136_params.pt \
         --output_dir=generation/emopia_remi_two
 ```
 2. For one-stage generation with REMI (baseline):

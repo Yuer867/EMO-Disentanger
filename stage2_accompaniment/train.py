@@ -71,32 +71,37 @@ def train_model(epoch, model, dloader, optim, sched, pad_token, model_type="perf
         losses = model.compute_loss(dec_logits, batch_dec_tgt)
 
         # clip gradient & update model
+        if accum_steps > 1:
+            losses['total_loss'] /= accum_steps
         losses['total_loss'].backward()
-        torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
-        optim.step()
-        recons_loss_rec += batch_samples['id'].size(0) * losses['recons_loss'].item()
-        accum_samples += batch_samples['id'].size(0)
 
-        total_acc, chord_acc, melody_acc, others_acc = \
-            compute_accuracy(dec_logits.cpu(), batch_dec_tgt.cpu(), batch_chord_idx, batch_melody_idx, pad_token)
+        if (train_steps % accum_steps) == 0:
+            torch.nn.utils.clip_grad_norm_(model.parameters(), 0.5)
+            optim.step()
+            optim.zero_grad()
+            recons_loss_rec += batch_samples['id'].size(0) * losses['recons_loss'].item() * accum_steps * accum_steps
+            accum_samples += batch_samples['id'].size(0) * accum_steps
+
+            total_acc, chord_acc, melody_acc, others_acc = \
+                compute_accuracy(dec_logits.cpu(), batch_dec_tgt.cpu(), batch_chord_idx, batch_melody_idx, pad_token)
+
+            print(
+                ' -- epoch {:03d} | batch {:03d}/{:03d}: len: {}\n   '
+                '* loss = {:.4f}, total_acc = {:.4f}, chord_acc = {:.4f}, '
+                'melody_acc = {:.4f}, others_acc = {:.4f}, '
+                'step = {}, time_elapsed = {:.2f} secs | redraw: {}'.format(
+                    epoch, batch_idx + 1, len(dloader), batch_inp_lens,
+                           recons_loss_rec / accum_samples, total_acc,
+                    chord_acc, melody_acc, others_acc, train_steps,
+                           time.time() - st, (not omit_feature_map_draw)
+                ))
 
         # anneal learning rate
-        if train_steps < warmup_steps:
-            curr_lr = max_lr * train_steps / warmup_steps
+        if (train_steps // accum_steps) < warmup_steps:
+            curr_lr = max_lr * train_steps / (warmup_steps * accum_steps)
             optim.param_groups[0]['lr'] = curr_lr
         else:
-            sched.step(train_steps - warmup_steps)
-
-        print(
-            ' -- epoch {:03d} | batch {:03d}/{:03d}: len: {}\n   '
-            '* loss = {:.4f}, total_acc = {:.4f}, chord_acc = {:.4f}, '
-            'melody_acc = {:.4f}, others_acc = {:.4f}, '
-            'step = {}, time_elapsed = {:.2f} secs | redraw: {}'.format(
-                epoch, batch_idx + 1, len(dloader), batch_inp_lens,
-                recons_loss_rec / accum_samples, total_acc,
-                chord_acc, melody_acc, others_acc, train_steps,
-                time.time() - st, (not omit_feature_map_draw)
-            ))
+            sched.step((train_steps // accum_steps - warmup_steps))
 
         if not train_steps % log_interval:
             log_data = {
@@ -239,6 +244,7 @@ if __name__ == "__main__":
     ckpt_interval = train_conf_['ckpt_interval']
     val_interval = 1
     log_interval = train_conf_['log_interval']
+    accum_steps = train_conf_.get("accum_steps", 1)
 
     # dataloader configurations
     batch_size = train_conf['data_loader']['batch_size']
