@@ -16,7 +16,7 @@ pip install -r requirements.txt
 pip install --user pytorch-fast-transformers
 
 # transformers
-pip install transformers
+pip install transformers==4.28.0
 ```
 
 * Install [midi2audio](https://github.com/bzamecnik/midi2audio) to synthesize generated MIDI to audio (optional)
